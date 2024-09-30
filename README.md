@@ -1,6 +1,8 @@
 # Crashday ASI Pluginkit
 This a pack of various ASI plugins for Crashday in one repository. All plugins in this repo are made only for 1.2 version!
 
+This repository was created so that instead of creating many small repositories for plugins, there would be one big one with different small plugins. Some plugins have their own repositories, you can read about it below.
+
 ## Plugins list
 - [Widescreen Fix](#widescreen-fix)
 - [Adjustable Afterburner](#adjustable-afterburner)
