@@ -1,7 +1,7 @@
 # Crashday ASIPluginkit
 This a pack of various ASI plugins for Crashday in one repository. All plugins in this repo are made only for 1.2 version!
 ## Plugins list
-- Widescreen Fix
+- [Widescreen Fix](#widescreen-fix)
 - Adjustable Afterburner
 ## Widescreen Fix
 Date Release: _September 25th, 2024_
