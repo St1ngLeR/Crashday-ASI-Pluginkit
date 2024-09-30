@@ -1,4 +1,4 @@
-# Crashday ASIPluginkit
+# Crashday ASI Pluginkit
 This a pack of various ASI plugins for Crashday in one repository. All plugins in this repo are made only for 1.2 version!
 ## Plugins list
 - [Widescreen Fix](#widescreen-fix)
