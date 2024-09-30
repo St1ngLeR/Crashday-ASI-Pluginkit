@@ -4,7 +4,7 @@ This a pack of various ASI plugins for Crashday in one repository. All plugins i
 ## Plugins list
 - [Widescreen Fix](#widescreen-fix)
 - [Adjustable Afterburner](#adjustable-afterburner)
-- 
+
 ## Widescreen Fix
 Date Release: _September 25th, 2024_
 
@@ -20,3 +20,5 @@ Date Release: _September 30th, 2024_
 Current version: _1.0.0_
 
 This ASI plugin returns ability to change afterburner values as it was made in 1.0 version.
+
+[Go to plugin folder](/tree/master/CD_Aftbur)
