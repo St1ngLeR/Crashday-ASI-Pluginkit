@@ -21,4 +21,4 @@ Current version: _1.0.0_
 
 This ASI plugin returns ability to change afterburner values as it was made in 1.0 version.
 
-[Go to plugin folder](https://github.com/St1ngLeR/Crashday-ASI-Pluginkit/tree/master/CD_Aftbur)
+[Go to plugin folder](../../tree/master/CD_Aftbur)
