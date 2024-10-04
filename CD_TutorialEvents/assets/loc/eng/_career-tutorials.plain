@@ -1,0 +1,42 @@
+# Tutorial Events
+# ---------------------------------------------------------------------------------
+
+Language: eng	# eng, rus, ger
+LanguageName: English	# English, Русский, Deutsch
+Sections: 3
+
+#-------------------------------------------------------------------------------------
+SECTION: intro1
+Keys: 2
+
+ID   TITLE
+DESC (Original:)
+TEXT Tutorial Race
+
+ID   BRIEFING
+DESC (Original:)
+TEXT Chris:||So I don't need to tell you how a race works, right? Step on the gas and finish first.
+
+#-------------------------------------------------------------------------------------
+SECTION: intro2
+Keys: 2
+
+ID   TITLE
+DESC (Original:)
+TEXT Tutorial Stunt
+
+ID   BRIEFING
+DESC (Original:)
+TEXT Chris:||Stunts are very easy to drive. For example, you drive over one of the ramps or the corkscrew behind it and get points for it. You also get points for every part of your car that you break. The cracks combine all of this. They stay in the air for as long as possible, bouncing off corners and flipping like crazy when they land. They really score points and may even get a bronze stunt or, at best, even a gold stunt. So that you can achieve the necessary acceleration, your Cube RS is equipped with a nitro booster. The disadvantage of the booster is that it overheats very quickly and has to cool down again before you can use it again. However, we are working on getting the overheating problem under control.
+
+#-------------------------------------------------------------------------------------
+SECTION: intro3
+Keys: 2
+
+ID   TITLE
+DESC (Original:)
+TEXT Tutorial Wrecking
+
+ID   BRIEFING
+DESC (Original:)
+TEXT Chris:||Well... Wrecking. Wrecking is primarily about destroying all other participating vehicles. Be it by simply ramming or using various toys that your car may be equipped with. Pay attention to the minimap. It works like a radar and shows your opponents and also the checkpoints. As you can see, your Cube RS is equipped with missiles and a minigun. Give them a try!
