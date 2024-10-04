@@ -1,0 +1,49 @@
+$ID intro1 TITLE	# event title
+auto     # mission objective displayed
+none # event participation condition
+1st=0 2nd=0 3rd=0 4th=0 5th=0 6th=0 # cash payment type
+0            # secret bonus cash
+0              # respect points for winning
+0           # additional respect points: finish block/division
+tutorial1.trk # track
+career/intro1.tga # Background image
+none # movie file after event finish
+none # spoken briefing audio file
+none        # soundtrack for the event
+none          # radio message audio file
+0           # set to 1 to always unlock track for singleplayer game
+checkpoint # mode
+
+
+START_OF_EVENT_DETAILS # ------------------------------------------------------------ #
+
+opps=1
+damagerealism=0
+gamemodeflag=0
+
+gamevar=race-ptp
+
+forcecar[0]=wolf
+forcestartcp[0]=1
+forcecarcolor[0]=DD5F20
+forcecartunings[0]=fbmp_l0|rbmp_l0|skrt_l0|hod_l0|wng_l1|crsh1|pnt2
+forcenumplate[0]=l_def.tga
+
+forcecar[1]=hunter
+forcestartcp[*]=1
+forcecarcolor[1]=2D5587
+forcecartunings[1]=fb1|rb1|sid1|hd1|wng1|pnt2
+forcedrivermodel[1]=driver2.p3d
+forcenumplate[1]=l_def.tga
+
+forcenitro[*]=none
+forceminigun[*]=none
+forcemines[*]=none
+forcemissile[*]=none
+
+
+END_OF_EVENT_DETAILS  # ------------------------------------------------------------ #
+
+START_OF_BRIEFING_TEXT # ----------------------------------------------------------- #
+$ID intro1 BRIEFING
+END_OF_BRIEFING_TEXT # ------------------------------------------------------------- #
