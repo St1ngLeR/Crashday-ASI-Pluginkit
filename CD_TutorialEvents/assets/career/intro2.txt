@@ -1,0 +1,42 @@
+$ID intro2 TITLE # event title
+auto        # mission objective displayed
+none # event participation condition
+1st=0 2nd=0 3rd=0 4th=0 5th=0 6th=0 # cash payment type
+0            # secret bonus cash
+0              # respect points for winning
+0           # additional respect points: finish block/division
+tutorial2.trk # track
+career/intro2.tga # Background image
+none # movie file after event finish
+none # spoken briefing audio file
+none        # soundtrack for the event
+none          # radio message audio file
+0           # set to 1 to always unlock track for singleplayer game
+stunt # mode
+
+
+START_OF_EVENT_DETAILS # ------------------------------------------------------------ #
+
+
+opps=0
+damagerealism=0
+
+gamevar=stunt-targetscore
+gamemodevalue=50000
+
+winningcond=stunt-reachtargetfasterthan
+winningcondvalue=300
+
+forcecar[0]=wolf
+forcecarcolor[0]=DD5F20
+forcecartunings[0]=fbmp_l0|rbmp_l0|skrt_l0|hod_l0|wng_l1|crsh1|pnt2
+forcenitro[0]=abnitro
+forcestartcp[0]=1
+forcenumplate[0]=l_def.tga
+
+
+END_OF_EVENT_DETAILS # ------------------------------------------------------------ #
+
+START_OF_BRIEFING_TEXT # ----------------------------------------------------------- #
+$ID intro2 BRIEFING
+END_OF_BRIEFING_TEXT # ------------------------------------------------------------- #

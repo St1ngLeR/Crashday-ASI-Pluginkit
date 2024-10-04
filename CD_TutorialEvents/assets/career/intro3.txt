@@ -1,0 +1,70 @@
+$ID intro3 TITLE # event title
+auto        # mission objective displayed
+none # event participation condition
+1st=0 2nd=0 3rd=0 4th=0 5th=0 6th=0 # cash payment type
+0            # secret bonus cash
+0              # respect points for winning
+0           # additional respect points: finish block/division
+tutorial3.trk # track
+career/intro3.tga # Background image
+none # movie file after event finish
+none # spoken briefing audio file
+none        # soundtrack for the event
+none          # radio message audio file
+0           # set to 1 to always unlock track for singleplayer game
+wrecking # mode
+
+
+START_OF_EVENT_DETAILS # ------------------------------------------------------------ #
+
+
+opps=2
+damagerealism=0.5
+
+gamevar=wreck-lms
+gamemodevalue=2
+
+
+forcecar[0]=wolf
+forcecarcolor[0]=DD5F20
+forcecartunings[0]=fbmp_l0|rbmp_l0|skrt_l0|hod_l0|wng_l1|crsh1|pnt2
+forcenitro[0]=abnitro
+forcestartcp[0]=1
+forcenumplate[0]=l_def.tga
+forcestartgridpos[0]=1
+forceminigun[0]=force
+forceminigunammo[0]=600
+forcemines[0]=force
+forcemineammo[0]=5
+forcemissile[0]=single
+forcemissileammo[0]=15
+
+forcecar[1]=wolf
+forcestartcp[1]=2
+forcestartgridpos[1]=1
+forcecarcolor[1]=70391B
+forceaggression[1]=100
+forceminigun[1]=none
+forcemines[1]=none
+forcemissile[1]=none
+forcecartunings[1]=fbmp_l0|rbmp_l0|skrt_l0|hod_l0|wng_l1|crsh1
+forcedrivermodel[1]=driver4.p3d
+forcenumplate[1]=l_pol1.tga
+
+forcecar[2]=hunter
+forcestartcp[2]=3
+forcestartgridpos[2]=1
+forcecarcolor[2]=75C9C6
+forceaggression[2]=90
+forceminigun[2]=none
+forcemines[2]=none
+forcemissile[2]=none
+forcecartunings[2]=fb1|rb1|sid1|hd1|wng1|pnt1
+forcedrivermodel[2]=driver2.p3d
+forcenumplate[2]=l_pol1.tga
+
+END_OF_EVENT_DETAILS  # ------------------------------------------------------------ #
+
+START_OF_BRIEFING_TEXT # ----------------------------------------------------------- #
+$ID intro3 BRIEFING
+END_OF_BRIEFING_TEXT # ------------------------------------------------------------- #
