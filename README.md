@@ -6,6 +6,7 @@ This repository was created so that instead of creating many small repositories 
 ## Plugins list
 - [Widescreen Fix](#widescreen-fix)
 - [Adjustable Afterburner](#adjustable-afterburner)
+- [Tutorial Events](#tutorial-events)
 
 ## Widescreen Fix
 Date Release: _September 25th, 2024_
@@ -26,3 +27,14 @@ This ASI plugin returns ability to change afterburner values as it was made in 1
 [Download the latest plugin version](https://github.com/St1ngLeR/Crashday-ASI-Pluginkit/releases/tag/CD_Aftbur)
 
 [Go to plugin source code folder](../../tree/master/CD_Aftbur)
+
+## Tutorial Events
+Date Release: _October 4th, 2024_
+
+Current version: _1.0.0_
+
+This plugin restores tutorial events that were "hidden" in the game release. The tracks to the events were recreated from screenshots. Added support for English and Russian languages ​​for these events.
+
+[Download the latest plugin version](https://github.com/St1ngLeR/Crashday-ASI-Pluginkit/releases/tag/CD_TutorialEvents)
+
+[Go to plugin source code folder](../../tree/master/CD_TutorialEvents)
