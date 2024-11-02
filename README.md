@@ -24,7 +24,7 @@ Date Release: _September 30th, 2024_
 
 Current version: _1.0.0_
 
-Supported game versions: _1.2_
+Supported game versions: _1.1, 1.2_
 
 This ASI plugin returns ability to change afterburner values as it was made in 1.0 version.
 
