@@ -7,6 +7,7 @@ This repository was created so that instead of creating many small repositories 
 - [Widescreen Fix](#widescreen-fix)
 - [Adjustable Afterburner](#adjustable-afterburner)
 - [Tutorial Events](#tutorial-events)
+- [Car Lights On/Off](#car-lights-onoff)
 
 ## Widescreen Fix
 Date Release: _September 25th, 2024_
@@ -44,3 +45,21 @@ This plugin restores tutorial events that were "hidden" in the game release. The
 [Download the latest plugin version](https://github.com/St1ngLeR/Crashday-ASI-Pluginkit/releases/tag/CD_TutorialEvents)
 
 [Go to plugin source code folder](../../tree/master/CD_TutorialEvents)
+
+## Car Lights On/Off
+Date Release: _November 28th, 2024_
+
+Current version: _1.0.0_
+
+Supported game versions: _1.2_
+
+This plugin restores unused feature of turning car lights on/off. The default key is "L". To change the key you need to create `CD_CarLightsOnOff.ini` with contents:
+```
+[CD_CarLightsOnOff]
+KeyActivation=76
+```
+Check decimal [Virtual Key codes](http://cherrytree.at/misc/vk.htm) to use them for this plugin.
+
+[Download the latest plugin version](https://github.com/St1ngLeR/Crashday-ASI-Pluginkit/releases/tag/CD_CarLightsOnOff)
+
+[Go to plugin source code folder](../../tree/master/CD_CarLightsOnOff)
