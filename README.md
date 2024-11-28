@@ -53,7 +53,7 @@ Current version: _1.0.0_
 
 Supported game versions: _1.2_
 
-This plugin restores unused feature of turning car lights on/off. The default key is "L". To change the key you need to create `CD_CarLightsOnOff.ini` with contents:
+This plugin restores cut feature of turning car lights on/off. The default key is "L". To change the key you need to create `CD_CarLightsOnOff.ini` with contents:
 ```
 [CD_CarLightsOnOff]
 KeyActivation=76
