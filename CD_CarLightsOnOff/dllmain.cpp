@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include <Windows.h>
 #include "ProcessMem.cpp"
 #include <filesystem>
 #include "VerDef.cpp"
@@ -31,23 +31,26 @@ DWORD WINAPI MainTHREAD(LPVOID)
     {
         while (true)
         {
-            ReadProcessMemory(hProcess, (LPVOID)(PM.FindDMAAddy(hProcess, moduleBase + 0x3DDEE0, { 0x14, 0xA0, 0x104, 0x4, 0x20, 0x4, 0x10 })), &game_state, 4, 0);
-            ReadProcessMemory(hProcess, (LPVOID)(PM.FindDMAAddy(hProcess, moduleBase + 0x3DEA20, { 0x10, 0x4, 0x734 })), &pause_state, 1, 0);
-            ReadProcessMemory(hProcess, (LPVOID)(PM.FindDMAAddy(hProcess, moduleBase + 0x3DC550, { 0x8 })), &game_speed, 4, 0);
-            if ((game_state == 1) && (pause_state == 0) && (game_speed != 0.0f))
+            if (PM.IsCurrentProcessActive())
             {
-                if (GetAsyncKeyState(def_keyactivation) & 1)
+                ReadProcessMemory(hProcess, (LPVOID)(PM.FindDMAAddy(hProcess, moduleBase + 0x3DDEE0, { 0x14, 0xA0, 0x104, 0x4, 0x20, 0x4, 0x10 })), &game_state, 4, 0);
+                ReadProcessMemory(hProcess, (LPVOID)(PM.FindDMAAddy(hProcess, moduleBase + 0x3DEA20, { 0x10, 0x4, 0x734 })), &pause_state, 1, 0);
+                ReadProcessMemory(hProcess, (LPVOID)(PM.FindDMAAddy(hProcess, moduleBase + 0x3DC550, { 0x8 })), &game_speed, 4, 0);
+                if ((game_state == 1) && (pause_state == 0) && (game_speed != 0.0f))
                 {
-                    ReadProcessMemory(hProcess, (LPVOID)(PM.FindDMAAddy(hProcess, moduleBase + 0x38CEE0, { 0x4, 0x4, 0x72F8 })), &car_lights_state, 1, 0);
-                    if (car_lights_state == 0)
+                    if (GetAsyncKeyState(def_keyactivation) & 1)
                     {
-                        car_lights_state = 1;
+                        ReadProcessMemory(hProcess, (LPVOID)(PM.FindDMAAddy(hProcess, moduleBase + 0x38CEE0, { 0x4, 0x4, 0x72F8 })), &car_lights_state, 1, 0);
+                        if (car_lights_state == 0)
+                        {
+                            car_lights_state = 1;
+                        }
+                        else
+                        {
+                            car_lights_state = 0;
+                        }
+                        WriteProcessMemory(hProcess, (LPVOID)(PM.FindDMAAddy(hProcess, moduleBase + 0x38CEE0, { 0x4, 0x4, 0x72F8 })), &car_lights_state, 1, 0);
                     }
-                    else
-                    {
-                        car_lights_state = 0;
-                    }
-                    WriteProcessMemory(hProcess, (LPVOID)(PM.FindDMAAddy(hProcess, moduleBase + 0x38CEE0, { 0x4, 0x4, 0x72F8 })), &car_lights_state, 1, 0);
                 }
             }
         }
