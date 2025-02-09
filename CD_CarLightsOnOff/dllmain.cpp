@@ -18,6 +18,8 @@ filesystem::path ini_file_path = filesystem::current_path() / "CD_CarLightsOnOff
 
 int game_state;
 int pause_state;
+int race_state;
+
 int car_lights_state;
 
 float game_speed;
@@ -35,8 +37,9 @@ DWORD WINAPI MainTHREAD(LPVOID)
             {
                 ReadProcessMemory(hProcess, (LPVOID)(PM.FindDMAAddy(hProcess, moduleBase + 0x3DDEE0, { 0x14, 0xA0, 0x104, 0x4, 0x20, 0x4, 0x10 })), &game_state, 4, 0);
                 ReadProcessMemory(hProcess, (LPVOID)(PM.FindDMAAddy(hProcess, moduleBase + 0x3DEA20, { 0x10, 0x4, 0x734 })), &pause_state, 1, 0);
+                ReadProcessMemory(hProcess, (LPVOID)(PM.FindDMAAddy(hProcess, moduleBase + 0x38D5F0, { 0x80 })), &race_state, 1, 0);
                 ReadProcessMemory(hProcess, (LPVOID)(PM.FindDMAAddy(hProcess, moduleBase + 0x3DC550, { 0x8 })), &game_speed, 4, 0);
-                if ((game_state == 1) && (pause_state == 0) && (game_speed != 0.0f))
+                if ((game_state == 1) && (pause_state == 0) && (race_state == 3) && (game_speed != 0.0f))
                 {
                     if (GetAsyncKeyState(def_keyactivation) & 1)
                     {
