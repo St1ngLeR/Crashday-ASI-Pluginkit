@@ -1,0 +1,30 @@
+# ASI-plugin - Improved Transmission System
+# ---------------------------------------------------------------------------------
+
+Language: eng	# eng, rus, ger
+LanguageName: English	# English, Русский, Deutsch
+Sections: 1
+
+#-------------------------------------------------------------------------------------
+SECTION: GearBox
+Keys: 5
+
+ID   SHIFTAUTOMATIC
+DESC (Original:)
+TEXT AT
+
+ID   SHIFTMANUAL
+DESC (Original:)
+TEXT MT
+
+ID   SUBTITLESELECTTRANSMISSION
+DESC (Original:)
+TEXT Select Transmission
+
+ID   TRANSMISSIONMANUAL
+DESC (Original:)
+TEXT Manual Transmission
+
+ID   TRANSMISSIONAUTOMATIC
+DESC (Original:)
+TEXT Automatic Transmission
