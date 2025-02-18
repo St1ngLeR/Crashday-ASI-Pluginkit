@@ -1,0 +1,30 @@
+# ASI-plugin - Improved Transmission System
+# ---------------------------------------------------------------------------------
+
+Language: rus	# eng, rus, ger
+LanguageName: Русский	# English, Русский, Deutsch
+Sections: 1
+
+#-------------------------------------------------------------------------------------
+SECTION: GearBox
+Keys: 5
+
+ID   SHIFTAUTOMATIC
+DESC (Original:)
+TEXT АКП
+
+ID   SHIFTMANUAL
+DESC (Original:)
+TEXT МКП
+
+ID   SUBTITLESELECTTRANSMISSION
+DESC (Original:)
+TEXT Выбор трансмиссии
+
+ID   TRANSMISSIONMANUAL
+DESC (Original:)
+TEXT Механическая|коробка передач
+
+ID   TRANSMISSIONAUTOMATIC
+DESC (Original:)
+TEXT Автоматическая|коробка передач
