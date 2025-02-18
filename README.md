@@ -8,6 +8,7 @@ This repository was created so that instead of creating many small repositories 
 - [Adjustable Afterburner](#adjustable-afterburner)
 - [Tutorial Events](#tutorial-events)
 - [Car Lights On/Off](#car-lights-onoff)
+- [Improved Transmission System](#improved-transmission-system)
 
 ## Widescreen Fix
 Date Release: _September 25th, 2024_
@@ -63,3 +64,24 @@ Check decimal [Virtual Key codes](http://cherrytree.at/misc/vk.htm) to use them 
 [Download the latest plugin version](https://github.com/St1ngLeR/Crashday-ASI-Pluginkit/releases/tag/CD_CarLightsOnOff_v1.0.1)
 
 [Go to plugin source code folder](../../tree/master/CD_CarLightsOnOff)
+
+## Improved Transmission System
+Date Release: _February 19th, 2025_
+
+Current version: _1.0.0_
+
+Supported game versions: _1.2_
+
+This plugin restores the ability to play with manual transmissions using a new menu. It also allows you to improve some aspects of gear shifting.
+```
+[CD_GearBox]
+Engine.EnableNeutralGear=true - Adds switching to neutral gear with automatic transmission. This option also fixes the "speedbug" in the game.
+HUD.EnableGearIndicator=true - Adds a gear indicator in speedometer along with the transmission type (AT or MT).
+KeyEvent.ShiftDown=*your value here* (Default - 162)
+KeyEvent.ShiftUp=*your value here* (Default - 160)
+```
+Check decimal [Virtual Key codes](http://cherrytree.at/misc/vk.htm) to use them for this plugin.
+
+[Download the latest plugin version](https://github.com/St1ngLeR/Crashday-ASI-Pluginkit/releases/tag/CD_GearBox_v1.0.0)
+
+[Go to plugin source code folder](../../tree/master/CD_GearBox)
