@@ -105,7 +105,6 @@ int keyevent_shiftdown = 0;
 bool hud_enablegearindicator = false;
 bool engine_enableneutralgear = false;
 
-int game_state;
 int pause_state;
 int race_state;
 
@@ -232,14 +231,13 @@ DWORD WINAPI MainTHREAD(LPVOID)
 
     while (true)
     {
-        ReadProcessMemory(hProcess, (LPVOID)(PM.FindDMAAddy(hProcess, moduleBase + 0x3DDEE0, { 0x14, 0xA0, 0x104, 0x4, 0x20, 0x4, 0x10 })), &game_state, 4, 0);
         ReadProcessMemory(hProcess, (LPVOID)(PM.FindDMAAddy(hProcess, moduleBase + 0x3DEA20, { 0x10, 0x4, 0x734 })), &pause_state, 1, 0);
         ReadProcessMemory(hProcess, (LPVOID)(PM.FindDMAAddy(hProcess, moduleBase + 0x38D5F0, { 0x80 })), &race_state, 1, 0);
         ReadProcessMemory(hProcess, (LPVOID)(PM.FindDMAAddy(hProcess, moduleBase + 0x3DC550, { 0x8 })), &game_speed, 4, 0);
 
         ReadProcessMemory(hProcess, (LPVOID)(PM.FindDMAAddy(hProcess, moduleBase + 0x38D5F0, { 0x6C })), &gamemodeflag, 4, 0);
         
-        if (game_state == 0)
+        if (race_state == 0)
         {
             ReadProcessMemory(hProcess, (LPVOID)(PM.FindDMAAddy(hProcess, moduleBase + 0x38D658, { 0x244 })), &elements_count, 1, 0);
             ReadProcessMemory(hProcess, (LPVOID)(PM.FindDMAAddy(hProcess, moduleBase + 0x38D658, { 0x0 })), &menu_id, 4, 0);
@@ -540,7 +538,7 @@ DWORD WINAPI MainTHREAD(LPVOID)
             }
         }
 
-        if ((game_state == 1) && (pause_state == 0) && (game_speed != 0.f))
+        if ((pause_state == 0) && (game_speed != 0.f))
         {
             ReadProcessMemory(hProcess, (void*)(moduleBase + 0x38CEDC), &players_count, 4, 0);
             for (uint32_t i = 1; i <= players_count; i++)
