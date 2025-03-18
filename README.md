@@ -92,7 +92,7 @@ Current version: _1.0.0_
 
 Supported game versions: _1.2_
 
-This plugin allows you to display information about the game in Discord. In the Discord profile during the game, the following is shown: being in the multiplayer lobby, in the track editor, the choice of car (with car name) and information about the current race (mode and other information).
+This plugin allows you to display information about the game in Discord. In the Discord profile during the game, the following is shown: being in the multiplayer lobby, in the track editor, the choice of car (with car name) and information about the current race (mode, track name and other information).
 
 [Go to plugin source code folder](../../tree/master/CD_DiscordRPC)
 
