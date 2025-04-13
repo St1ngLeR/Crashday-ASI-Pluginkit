@@ -1,22 +1,27 @@
-#include <regex>
-#include <fstream>
+//#include <regex>
+//#include <fstream>
 #include "filesystem"
 #include "Windows.h"
 
 using namespace std;
-
-char curlanguange[32] = {};
+/*
+char curlanguage[32] = {};
 
 bool unit_init = false;
 
 string unit_output;
 string unitstring;
+*/
 
-HANDLE hProcess2;
-uintptr_t moduleBase2;
+ProcessMem PM;
 
-ProcessMem PM2;
+string FullPath = PM.GetProcessPathByPID(GetCurrentProcessId());
+filesystem::path p(FullPath);
+string filename = p.filename().string();
+uintptr_t moduleBase = PM.GetModuleBaseAddress(GetCurrentProcessId(), filename.c_str());
+HANDLE hProcess = GetCurrentProcess();
 
+/*
 std::vector<std::string> splitString(const std::string& str) {
 	std::vector<std::string> result;
 	std::stringstream ss(str);
@@ -46,10 +51,100 @@ std::string trimLeadingSpaces(const std::string& str) {
 	}
 	return str.substr(first);
 }
+*/
+
+char cursection[128] = {};
+char curkey[128] = {};
+
+uintptr_t cursectionnum = 0;
+uintptr_t curkeynum = 0;
+
+char result[8192] = {};
+
+int sections;
+int keys;
 
 class CDLocalization
 {
 public:
+
+	string LocString(const char* section, const char* key)
+	{
+		ReadProcessMemory(hProcess, (LPVOID)(PM.FindDMAAddy(hProcess, moduleBase + 0x3E3110, { 0x52 })), &sections, 2, 0);
+		//cout << "Total sections: " << sections << endl;
+		result[0] = '\0';
+		for (cursectionnum = 0; cursectionnum != sections; cursectionnum++)
+		{
+			ReadProcessMemory(hProcess, (LPVOID)(PM.FindDMAAddy(hProcess, moduleBase + 0x3E3110, { 0x54, 0x8C * cursectionnum })), &cursection, sizeof(cursection), 0);
+			//cout << "Section " << cursectionnum << ": " << cursection << endl;
+			if (string(cursection) == string(section))
+			{
+				//cout << "FOUND!" << endl;
+				ReadProcessMemory(hProcess, (LPVOID)(PM.FindDMAAddy(hProcess, moduleBase + 0x3E3110, { 0x54, 0x80 + (0x8C * cursectionnum) })), &keys, 4, 0);
+				//cout << "Total keys in section " << cursectionnum << ": " << keys << endl;
+				for (curkeynum = 0; curkeynum != keys; curkeynum++)
+				{
+					ReadProcessMemory(hProcess, (LPVOID)(PM.FindDMAAddy(hProcess, moduleBase + 0x3E3110, { 0x54, 0x84 + (0x8C * cursectionnum), 0x8C * curkeynum })), &curkey, sizeof(curkey), 0);
+					//cout << "Key " << curkeynum << " in section " << cursectionnum << ": " << curkey << endl;
+					if (string(curkey) == string(key))
+					{
+						ReadProcessMemory(hProcess, (LPVOID)(PM.FindDMAAddy(hProcess, moduleBase + 0x3E3110, { 0x54, 0x84 + (0x8C * cursectionnum), 0x84 + (0x8C * curkeynum), 0x0 })), &result, sizeof(result), 0);
+						if (string(result) == "")
+						{
+							ReadProcessMemory(hProcess, (LPVOID)(PM.FindDMAAddy(hProcess, moduleBase + 0x3E3110, { 0x54, 0x84 + (0x8C * cursectionnum), 0x80 + (0x8C * curkeynum), 0x0 })), &result, sizeof(result), 0);
+							//cout << "Default language text in key " << curkeynum << " in section " << cursectionnum << ": " << result << " (0x" << hex << (LPVOID)(PM.FindDMAAddy(hProcess, moduleBase + 0x3E3110, { 0x54, 0x84 + (0x8C * cursectionnum), 0x80 + (0x8C * curkeynum), 0x0 })) << ")" << endl;
+						}
+						else
+						{
+							//cout << "Current language text in key " << curkeynum << " in section " << cursectionnum << ": " << result << " (0x" << hex << (LPVOID)(PM.FindDMAAddy(hProcess, moduleBase + 0x3E3110, { 0x54, 0x84 + (0x8C * cursectionnum), 0x84 + (0x8C * curkeynum), 0x0 })) << ")" << endl;
+						}
+					}
+				}
+			}
+		}
+		return string(result);
+		/*
+		while (string(cursection) != string(section))
+		{
+			if (cursectionnum <= sections)
+			{
+				ReadProcessMemory(hProcess, (LPVOID)(PM.FindDMAAddy(hProcess, moduleBase + 0x3E3110, { 0x54, 0x8C * cursectionnum })), &cursection, sizeof(cursection), 0);
+				cout << "Section " << cursectionnum << ": " << cursection << endl;
+				cursectionnum++;
+			}
+			else
+			{
+				break;
+			}
+		}
+		ReadProcessMemory(hProcess, (LPVOID)(PM.FindDMAAddy(hProcess, moduleBase + 0x3E3110, { 0x54, 80 + (0x8C * cursectionnum) })), &keys, 4, 0);
+		while (string(curkey) != string(key))
+		{
+			if (curkeynum <= keys)
+			{
+				ReadProcessMemory(hProcess, (LPVOID)(PM.FindDMAAddy(hProcess, moduleBase + 0x3E3110, { 0x54, 0x84 + (0x8C * (cursectionnum - 1)), 0x8C * curkeynum })), &curkey, sizeof(curkey), 0);
+				cout << "Key " << curkeynum << " in section " << cursectionnum - 1 << ": " << curkey << endl;
+				curkeynum++;
+			}
+			else
+			{
+				break;
+			}
+		}
+		ReadProcessMemory(hProcess, (LPVOID)(PM.FindDMAAddy(hProcess, moduleBase + 0x3E3110, { 0x54, 0x84 + (0x8C * (cursectionnum - 1)), 0x84 + (0x8C * (curkeynum - 1)), 0x0 })), &result, sizeof(result), 0);
+		if (string(result).empty())
+		{
+			ReadProcessMemory(hProcess, (LPVOID)(PM.FindDMAAddy(hProcess, moduleBase + 0x3E3110, { 0x54, 0x84 + (0x8C * (cursectionnum - 1)), 0x80 + (0x8C * (curkeynum - 1)), 0x0 })), &result, sizeof(result), 0);
+			cout << "Default language text in key " << curkeynum - 1 << " in section " << cursectionnum - 1 << ": " << result << endl;
+		}
+		else
+		{
+			cout << "Current language text in key " << curkeynum - 1 << " in section " << cursectionnum - 1 << ": " << result << endl;
+		}
+		*/
+	}
+
+	/*
 	char* Init(HANDLE hProcessInput, uintptr_t moduleBaseInput)
 	{
 		hProcess2 = hProcessInput;
@@ -130,7 +225,7 @@ public:
 			return strinput;
 		}
 	}
-
+	
 	string LocUnit(float value, string unit, filesystem::path gamedirectory)
 	{
 		string unitspath;
@@ -186,4 +281,5 @@ public:
 		cout << unit_output << endl;
 		return unit_output;
 	}
+	*/
 };
