@@ -1,8 +1,8 @@
-#include "Windows.h"
+﻿#include "Windows.h"
 #include "ProcessMem.cpp"
 #include "CDLocalization.cpp"
-#include <filesystem>
-#include <iostream>
+//#include <filesystem>
+//#include <iostream>
 #include "iniparser.h"
 
 using namespace std;
@@ -12,46 +12,43 @@ using IniParser = ini::IniParser;
 IniParser ipa;
 ini::inimap ini_data;
 
-ProcessMem PM;
 CDLocalization loc;
-
-string FullPath = PM.GetProcessPathByPID(GetCurrentProcessId());
-filesystem::path p(FullPath);
-string filename = p.filename().string();
-uintptr_t moduleBase = PM.GetModuleBaseAddress(GetCurrentProcessId(), filename.c_str());
-HANDLE hProcess = GetCurrentProcess();
 
 filesystem::path ini_file_path = filesystem::current_path() / "CD_GearBox.ini";
 
 string text_speedo;
 
-int space_width;
+//int space_width;
+float spacewidth;
 float widthscale;
+//string curlanguage;
 
+/*
+// Функция для поиска символа с учетом нумерации вхождений
 int findOccurrence(const string& text, const char* targetChar, int occurrenceNumber) {
     int occurrenceNumber2 = occurrenceNumber + 1;
     if (occurrenceNumber2 <= 0 || targetChar == nullptr || targetChar[0] == '\0') {
-        return -1;
+        return -1; // Некорректный номер вхождения или пустой символ для поиска
     }
 
-    char charToFind = targetChar[0];
+    char charToFind = targetChar[0]; // Извлекаем первый символ из C-строки
 
     int count = 0;
     for (int i = 0; i < text.length(); ++i) {
         if (text[i] == charToFind) {
             count++;
             if (count == occurrenceNumber2) {
-                return i;
+                return i; // Нашли нужное вхождение, возвращаем индекс
             }
         }
     }
 
-    return -1; 
+    return -1; // Вхождение с таким номером не найдено
 }
 
 string text_space(int width)
 {
-    string curlanguage = loc.Init(hProcess, moduleBase);
+    curlanguage = "rus";
 
     filesystem::path fullpath;
 
@@ -92,6 +89,21 @@ string text_space(int width)
     {
         result += " ";
     }
+    cout << result.length() << endl;
+    return result;
+}
+*/
+
+string text_space()
+{
+    ReadProcessMemory(hProcess, (LPVOID)(PM.FindDMAAddy(hProcess, moduleBase + 0x3CF700, { 0x50B0 + 0x19E4 })), &widthscale, 4, 0);
+    ReadProcessMemory(hProcess, (LPVOID)(PM.FindDMAAddy(hProcess, moduleBase + 0x3CF700, { 0x50B0 + 0x1664 })), &spacewidth, 4, 0);
+    string result;
+    for (int i = 0; i < round(-0.00679 * widthscale - 3.06333 * spacewidth + 32.2048); i++)
+    {
+        result += " ";
+    }
+    //cout << "Width scale: " << widthscale << " Space width: " << spacewidth << " Result length: " << result.length() << " (" << -0.00679 * widthscale - 3.06333 * spacewidth + 32.2048 << ")" << endl;
     return result;
 }
 
@@ -105,6 +117,7 @@ int keyevent_shiftdown = 0;
 bool hud_enablegearindicator = false;
 bool engine_enableneutralgear = false;
 
+//int game_state;
 int pause_state;
 int race_state;
 
@@ -122,6 +135,8 @@ int players_count;
 int addr_speedo;
 int addr2_speedo;
 
+//int collision_check;
+
 float carplayer_rpmcur1;
 float carplayer_rpmcur2;
 
@@ -131,7 +146,17 @@ float carplayer_rpmshiftdown;
 float game_speed;
 
 float carplayer_speed;
+/*
+float longforce_fl;
+float longforce_fr;
+float longforce_rl;
+float longforce_rr;
 
+float slipangle_fl;
+float slipangle_fr;
+float slipangle_rl;
+float slipangle_rr;
+*/
 string curgearcolor;
 string curgear;
 string geartype;
@@ -174,10 +199,15 @@ int key_joystick_y;
 int key_lmb;
 int key_rmb;
 
+int event_type;
+
 string gamevar;
 
 DWORD WINAPI MainTHREAD(LPVOID)
 {
+    //AllocConsole();
+    //freopen("CONOUT$", "w", stdout);
+
     text_speedo.reserve(128);
 
     if (!filesystem::exists(ini_file_path))
@@ -185,9 +215,12 @@ DWORD WINAPI MainTHREAD(LPVOID)
         ipa.setAllowComments(true);
         ipa.setCommentSign('#');
 
+        //ini_data["CD_GearBox"]["#0"] = "# For key value use decimal Virtual Key codes (https://cherrytree.at/misc/vk.htm).";
         ini_data["CD_GearBox"]["KeyEvent.ShiftUp"] = "160";
         ini_data["CD_GearBox"]["KeyEvent.ShiftDown"] = "162";
+        //ini_data["CD_GearBox"]["#1"] = "# This option displays a gear indicator near the odometer on the speedometer.";
         ini_data["CD_GearBox"]["HUD.EnableGearIndicator"] = "true";
+        //ini_data["CD_GearBox"]["#2"] = "# This option adds the inclusion of neutral gear for cars. With this option, performing a \"speedbug\" is impossible.";
         ini_data["CD_GearBox"]["Engine.EnableNeutralGear"] = "true";
 
         ipa.writeFile(ini_file_path.string(), ini_data);
@@ -236,7 +269,7 @@ DWORD WINAPI MainTHREAD(LPVOID)
         ReadProcessMemory(hProcess, (LPVOID)(PM.FindDMAAddy(hProcess, moduleBase + 0x3DC550, { 0x8 })), &game_speed, 4, 0);
 
         ReadProcessMemory(hProcess, (LPVOID)(PM.FindDMAAddy(hProcess, moduleBase + 0x38D5F0, { 0x6C })), &gamemodeflag, 4, 0);
-        
+
         if (race_state == 0)
         {
             ReadProcessMemory(hProcess, (LPVOID)(PM.FindDMAAddy(hProcess, moduleBase + 0x38D658, { 0x244 })), &elements_count, 1, 0);
@@ -245,18 +278,12 @@ DWORD WINAPI MainTHREAD(LPVOID)
 
             if (menu_id == 5471472)
             {
-                ReadProcessMemory(hProcess, (LPVOID)(PM.FindDMAAddy(hProcess, moduleBase + 0x3A8800, { 0x8 })), &race_info_len, 4, 0);
-                ReadProcessMemory(hProcess, (LPVOID)(PM.FindDMAAddy(hProcess, moduleBase + 0x3A8800, { 0xC })), &race_info, race_info_len, 0);
-
-                string race_info_str = string(race_info, race_info_len);
-                string gamevar_temp = race_info_str.substr(race_info_str.find("gamevar=") + 8, race_info_str.find(" "));
-                string gamevar = gamevar_temp.substr(0, gamevar_temp.find(" "));
-
                 if (!window_init)
                 {
                     is_hovered = false;
                 }
-                if ((gamevar == "race-laps") || (gamevar == "race-ptp") || (gamevar == "race-ko"))
+                ReadProcessMemory(hProcess, (void*)(moduleBase + 0x3A87FC), &event_type, 4, 0);
+                if (event_type == 3)
                 {
                     struct ElementData {
                         LPVOID name_len_addr;
@@ -293,21 +320,25 @@ DWORD WINAPI MainTHREAD(LPVOID)
                     LPVOID blinds_dur_addr = (LPVOID)PM.FindDMAAddy(hProcess, moduleBase + 0x38D658, { 0x2B8 });
                     LPVOID gamemodeflag_addr;
 
-                    uint32_t gamemodeflag_index = race_info_str.find("gamemodeflag=") + 13;
+                    uint32_t gamemodeflag_index = race_info_str.find("gamemodeflag=") + 14;
                     gamemodeflag_addr = (LPVOID)PM.FindDMAAddy(hProcess, moduleBase + 0x3A8800, { 0xC + gamemodeflag_index });
 
+                    // ------------------ Inner Loop ------------------
                     for (uint32_t i = 0; i < elements_count; i++)
                     {
                         uint32_t element_name_len;
-                        char element_name[256]; 
+                        char element_name[256]; // Adjust size as needed
                         if (!ReadProcessMemory(hProcess, element_data[i].name_len_addr, &element_name_len, 4, 0)) {
+                            // Handle error
                             continue;
                         }
                         if (!ReadProcessMemory(hProcess, element_data[i].name_addr, &element_name, element_name_len, 0)) {
+                            // Handle error
                             continue;
                         }
                         string element_name_str = string(element_name, element_name_len);
 
+                        // --- garcam != 1 ---
                         if (garcam != 1)
                         {
                             element_appearance = 0;
@@ -325,7 +356,7 @@ DWORD WINAPI MainTHREAD(LPVOID)
                                 WriteProcessMemory(hProcess, element_data[i].appearance_addr, &element_appearance, 1, 0);
                             }
                         }
-
+                        // --- garcam == 1 ---
                         else
                         {
                             if (element_name_str == elements_toshow[5])
@@ -335,17 +366,18 @@ DWORD WINAPI MainTHREAD(LPVOID)
                             }
 
                             if (!ReadProcessMemory(hProcess, element_data[i].appearance_addr, &element_appearance, 1, 0)) {
-
+                                // Handle error
                             }
                             if (element_appearance == 0)
                             {
                                 WriteProcessMemory(hProcess, element_data[i].animdur_addr, &element_animdur, 4, 0);
                             }
 
+                            // --- Arrow Logic ---  (Consolidated for readability)
                             if (element_name_str == elements_tohide[2] || element_name_str == elements_tohide[3])
                             {
                                 float scale_x;
-                                bool& arrow_flag = (element_name_str == elements_tohide[2]) ? arrowl : arrowr;
+                                bool& arrow_flag = (element_name_str == elements_tohide[2]) ? arrowl : arrowr; // Reference to the correct flag
                                 float default_scale_x = (element_name_str == elements_tohide[2]) ? -100.f : 100.f;
 
                                 if (!window_init)
@@ -362,14 +394,17 @@ DWORD WINAPI MainTHREAD(LPVOID)
                                 }
                                 else
                                 {
+                                    //scale_x = default_scale_x;
                                     WriteProcessMemory(hProcess, element_data[i].scalex_addr, &default_scale_x, 4, 0);
                                 }
                             }
 
                             float menutitledur;
                             if (!ReadProcessMemory(hProcess, menutitledur_addr, &menutitledur, 4, 0)) {
+                                // Handle Error
                             }
 
+                            // --- Keypress Handling ---
                             if (menutitledur > 0.4f && PM.IsCurrentProcessActive())
                             {
                                 BYTE key_enter, key_joystick_x, key_escape, key_joystick_y, key_lmb, key_rmb;
@@ -387,12 +422,14 @@ DWORD WINAPI MainTHREAD(LPVOID)
                                 {
                                     if ((key_enter == 128) || (key_joystick_x == 128))
                                     {
+                                        //Sleep(10);
                                         window_init = true;
                                     }
                                     if (element_name_str == elements_tohide[4])
                                     {
                                         if (((key_lmb == 128) || (key_rmb == 128)) && (i == hovered_element_mouse))
                                         {
+                                            //Sleep(10);
                                             window_init = true;
                                         }
                                     }
@@ -401,25 +438,28 @@ DWORD WINAPI MainTHREAD(LPVOID)
                                 {
                                     if ((key_escape == 128) || (key_joystick_y == 128))
                                     {
+                                        //Sleep(10);
                                         window_init = false;
                                     }
                                     if (element_name_str == elements_toshow[1])
                                     {
                                         if (((key_lmb == 128) || (key_rmb == 128)) && (i == hovered_element_mouse))
                                         {
+                                            //Sleep(10);
                                             window_init = false;
                                         }
                                     }
                                 }
                             }
 
+                            // --- elements_toshow/tohide loops --- (Consolidated)
                             for (const auto& element : elements_toshow)
                             {
                                 if (element_name_str == element)
                                 {
                                     element_appearance = (window_init) ? 1 : 0;
                                     WriteProcessMemory(hProcess, element_data[i].appearance_addr, &element_appearance, 1, 0);
-                                    break; 
+                                    break; // Stop after finding the first match
                                 }
                             }
 
@@ -429,22 +469,24 @@ DWORD WINAPI MainTHREAD(LPVOID)
                                 {
                                     element_appearance = (window_init) ? 0 : 1;
                                     WriteProcessMemory(hProcess, element_data[i].appearance_addr, &element_appearance, 1, 0);
-                                    break;
+                                    break; // Stop after finding the first match
                                 }
                             }
 
+                            // --- Hover Logic ---
                             if ((element_name_str == elements_toshow[6]) && (window_init) && (!is_hovered))
                             {
                                 WriteProcessMemory(hProcess, hovered_element_addr, &i, 2, 0);
                                 is_hovered = true;
                             }
 
+                            // --- Gamemode Flag Logic ---
                             if (window_init)
                             {
                                 WORD hovered_element;
                                 if (!ReadProcessMemory(hProcess, hovered_element_addr, &hovered_element, 2, 0)) { /* Handle Error */ }
 
-                                int gamemodeflag_val = -1;
+                                int gamemodeflag_val = -1; // Initialize with a default value.
                                 if (element_name_str == elements_toshow[6] && i == hovered_element)
                                 {
                                     gamemodeflag_val = 48;
@@ -454,11 +496,13 @@ DWORD WINAPI MainTHREAD(LPVOID)
                                     gamemodeflag_val = 49;
                                 }
 
+                                // Only write if gamemodeflag_val was actually set.
                                 if (gamemodeflag_val != -1) {
                                     WriteProcessMemory(hProcess, gamemodeflag_addr, &gamemodeflag_val, 1, 0);
                                 }
                             }
 
+                            // --- Blinds Logic ---
                             if (window_init)
                             {
                                 if (!blinds)
@@ -484,9 +528,10 @@ DWORD WINAPI MainTHREAD(LPVOID)
                         }
                     }
                 }
-
+                // ================== Second Major Conditional ==================
                 else
                 {
+                    // ------------------ Pre-Inner Loop Setup ------------------
                     struct ElementData {
                         LPVOID name_len_addr;
                         LPVOID name_addr;
@@ -511,12 +556,13 @@ DWORD WINAPI MainTHREAD(LPVOID)
                     for (uint32_t i = 0; i < elements_count; i++)
                     {
                         uint32_t element_name_len;
-                        char element_name[256];
+                        char element_name[256]; // Adjust size as needed
                         if (!ReadProcessMemory(hProcess, element_data[i].name_len_addr, &element_name_len, 4, 0)) {
                             // Handle error
                             continue;
                         }
                         if (!ReadProcessMemory(hProcess, element_data[i].name_addr, &element_name, element_name_len, 0)) {
+                            // Handle error
                             continue;
                         }
                         string element_name_str = string(element_name, element_name_len);
@@ -562,6 +608,31 @@ DWORD WINAPI MainTHREAD(LPVOID)
                         }
                     }
                 }
+                /*
+                ReadProcessMemory(hProcess, (LPVOID)(PM.FindDMAAddy(hProcess, moduleBase + 0x38CEE0, { 4 + (8 * (i - 1)), 0x1A98 })), &collision_check, 1, 0);
+
+                ReadProcessMemory(hProcess, (LPVOID)(PM.FindDMAAddy(hProcess, moduleBase + 0x38CEE0, { 4 + (8 * (i - 1)), 0x69E8 })), &longforce_fl, 4, 0);
+                ReadProcessMemory(hProcess, (LPVOID)(PM.FindDMAAddy(hProcess, moduleBase + 0x38CEE0, { 4 + (8 * (i - 1)), 0x6B50 })), &longforce_fr, 4, 0);
+                ReadProcessMemory(hProcess, (LPVOID)(PM.FindDMAAddy(hProcess, moduleBase + 0x38CEE0, { 4 + (8 * (i - 1)), 0x6CB8 })), &longforce_rl, 4, 0);
+                ReadProcessMemory(hProcess, (LPVOID)(PM.FindDMAAddy(hProcess, moduleBase + 0x38CEE0, { 4 + (8 * (i - 1)), 0x6E20 })), &longforce_rr, 4, 0);
+
+                ReadProcessMemory(hProcess, (LPVOID)(PM.FindDMAAddy(hProcess, moduleBase + 0x38CEE0, { 4 + (8 * (i - 1)), 0x69EC })), &slipangle_fl, 4, 0);
+                ReadProcessMemory(hProcess, (LPVOID)(PM.FindDMAAddy(hProcess, moduleBase + 0x38CEE0, { 4 + (8 * (i - 1)), 0x6B54 })), &slipangle_fr, 4, 0);
+                ReadProcessMemory(hProcess, (LPVOID)(PM.FindDMAAddy(hProcess, moduleBase + 0x38CEE0, { 4 + (8 * (i - 1)), 0x6CBC })), &slipangle_rl, 4, 0);
+                ReadProcessMemory(hProcess, (LPVOID)(PM.FindDMAAddy(hProcess, moduleBase + 0x38CEE0, { 4 + (8 * (i - 1)), 0x6E24 })), &slipangle_rr, 4, 0);
+
+                if ((carplayer_speed == 0.f) && ((slipangle_fl / 100.f && slipangle_fr / 100.f && slipangle_rl / 100.f && slipangle_rr / 100.f != 0.f) || (longforce_fl && longforce_fr && longforce_rl && longforce_rr == 0.f)))
+                {
+                    if (collision_check == 0)
+                    {
+                        WriteProcessMemory(hProcess, (LPVOID)(PM.FindDMAAddy(hProcess, moduleBase + 0x38CEE0, { 4 + (8 * (i - 1)), 0xB74 })), &carplayer_physics_off, 4, 0);
+                    }
+                    else
+                    {
+                        WriteProcessMemory(hProcess, (LPVOID)(PM.FindDMAAddy(hProcess, moduleBase + 0x38CEE0, { 4 + (8 * (i - 1)), 0xB74 })), &carplayer_physics_on, 4, 0);
+                    }
+                }
+                */
                 if (i == 1)
                 {
                     if ((gamemodeflag == 1) && (race_state == 3))
@@ -608,28 +679,36 @@ DWORD WINAPI MainTHREAD(LPVOID)
                     }
                     if (hud_enablegearindicator)
                     {
-                        loc.Init(hProcess, moduleBase);
+                        //loc.Init(hProcess, moduleBase);
 
                         if (gamemodeflag == 0)
                         {
-                            geartype = loc.LocString("$ID GearBox SHIFTAUTOMATIC", p.parent_path(), "_gearbox");
+                            //geartype = "AT";
+                            geartype = loc.LocString("GearBox", "SHIFTAUTOMATIC");
                         }
                         else
                         {
-                            geartype = loc.LocString("$ID GearBox SHIFTMANUAL", p.parent_path(), "_gearbox");
+                            //geartype = "MT";
+                            geartype = loc.LocString("GearBox", "SHIFTMANUAL");
                         }
 
                         if (carplayer_gear1 == 0)
                         {
                             curgear = "N";
+
+                            //WriteProcessMemory(hProcess, (void*)(addr2_speedo + text_offset), &text_gearn, strlen(text_gearn), 0);
                         }
                         else if (carplayer_gear1 == 255)
                         {
                             curgear = "R";
+
+                            //WriteProcessMemory(hProcess, (void*)(addr2_speedo + text_offset), &text_gearr, strlen(text_gearr), 0);
                         }
                         else
                         {
                             curgear = to_string(carplayer_gear1);
+
+                            //WriteProcessMemory(hProcess, (void*)(addr2_speedo + text_offset), &carplayer_gear_str, carplayer_gear_str.length(), 0);
                         }
 
                         ReadProcessMemory(hProcess, (void*)(carplayer_gear_ptr + 0x30C), &carplayer_rpmcur1, 4, 0);
@@ -648,7 +727,7 @@ DWORD WINAPI MainTHREAD(LPVOID)
                             curgearcolor = "7"; // White
                         }
 
-                        string text_format = format("\\+{}\\-\\-\\-  \\9{}\\d\\+\\+|\\{}{} \\-\\-\\9{}", "%d", "%s", curgearcolor, curgear, geartype) + text_space(900);
+                        string text_format = format("\\+{}\\-\\-\\-  \\9{}\\d\\+\\+|\\{}{} \\-\\-\\9{}", "%d", "%s", curgearcolor, curgear, geartype) + text_space();
                         text_speedo = text_format;
                     }
                 }
