@@ -203,6 +203,8 @@ int event_type;
 
 string gamevar;
 
+int spectator_id;
+
 DWORD WINAPI MainTHREAD(LPVOID)
 {
     //AllocConsole();
@@ -677,6 +679,10 @@ DWORD WINAPI MainTHREAD(LPVOID)
                             }
                         }
                     }
+                }
+                ReadProcessMemory(hProcess, (LPVOID)(PM.FindDMAAddy(hProcess, moduleBase + 0x3DEA20, { 0x10, 0x4, 0x198 })), &spectator_id, 1, 0);
+                if (i == spectator_id + 1)
+                {
                     if (hud_enablegearindicator)
                     {
                         //loc.Init(hProcess, moduleBase);
