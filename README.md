@@ -69,7 +69,7 @@ Check decimal [Virtual Key codes](http://cherrytree.at/misc/vk.htm) to use them 
 ## Improved Transmission System
 Date Release: _February 19th, 2025_
 
-Current version: _1.0.1_
+Current version: _1.1.0_
 
 Supported game versions: _1.2_
 
@@ -83,7 +83,9 @@ KeyEvent.ShiftUp=*your value here* (Default - 160)
 ```
 Check decimal [Virtual Key codes](http://cherrytree.at/misc/vk.htm) to use them for this plugin.
 
-[Download the latest plugin version](https://github.com/St1ngLeR/Crashday-ASI-Pluginkit/releases/tag/CD_GearBox_v1.0.0)
+[Download the latest plugin version](https://github.com/St1ngLeR/Crashday-ASI-Pluginkit/releases/tag/CD_GearBox_v1.1.0)
+
+[Go to plugin source code folder](../../tree/master/CD_GearBox)
 
 ## Discord Rich Presence
 Date Release: _March 19th, 2025_
@@ -94,6 +96,6 @@ Supported game versions: _1.2_
 
 This plugin allows you to display information about the game in Discord. In the Discord profile during the game, the following is shown: being in the multiplayer lobby, in the track editor, the choice of car (with car name) and information about the current race (mode, track name and other information).
 
-[Go to plugin source code folder](../../tree/master/CD_DiscordRPC)
-
 [Download the latest plugin version](https://github.com/St1ngLeR/Crashday-ASI-Pluginkit/releases/tag/CD_DiscordRPC_v1.0.0)
+
+[Go to plugin source code folder](../../tree/master/CD_DiscordRPC)
