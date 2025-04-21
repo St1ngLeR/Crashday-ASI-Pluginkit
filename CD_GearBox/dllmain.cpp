@@ -1,8 +1,6 @@
 ﻿#include "Windows.h"
 #include "ProcessMem.cpp"
 #include "CDLocalization.cpp"
-//#include <filesystem>
-//#include <iostream>
 #include "iniparser.h"
 
 using namespace std;
@@ -18,81 +16,8 @@ filesystem::path ini_file_path = filesystem::current_path() / "CD_GearBox.ini";
 
 string text_speedo;
 
-//int space_width;
 float spacewidth;
 float widthscale;
-//string curlanguage;
-
-/*
-// Функция для поиска символа с учетом нумерации вхождений
-int findOccurrence(const string& text, const char* targetChar, int occurrenceNumber) {
-    int occurrenceNumber2 = occurrenceNumber + 1;
-    if (occurrenceNumber2 <= 0 || targetChar == nullptr || targetChar[0] == '\0') {
-        return -1; // Некорректный номер вхождения или пустой символ для поиска
-    }
-
-    char charToFind = targetChar[0]; // Извлекаем первый символ из C-строки
-
-    int count = 0;
-    for (int i = 0; i < text.length(); ++i) {
-        if (text[i] == charToFind) {
-            count++;
-            if (count == occurrenceNumber2) {
-                return i; // Нашли нужное вхождение, возвращаем индекс
-            }
-        }
-    }
-
-    return -1; // Вхождение с таким номером не найдено
-}
-
-string text_space(int width)
-{
-    curlanguage = "rus";
-
-    filesystem::path fullpath;
-
-    if (curlanguage == "eng")
-    {
-        fullpath.assign(p.parent_path() / "textures" / "fonts" / "fontinfo.dbs");
-    }
-    else
-    {
-        fullpath.assign(p.parent_path() / "loc" / curlanguage / "textures" / "fonts" / "fontinfo.dbs");
-    }
-
-    ifstream file(fullpath);
-    string line;
-    int lineCounter = 0;
-    filesystem::path fullfontpath;
-    while (getline(file, line))
-    {
-        lineCounter++;
-        if (lineCounter == 7)
-        {
-            widthscale = stof(line.substr(line.find(' ', line.find(' ') + 1) + 1, line.find(' ', line.find(' ', line.find(' ') + 1) + 1) - (line.find(' ', line.find(' ') + 1) + 1)));
-            if (curlanguage == "eng")
-            {
-                fullfontpath.assign(p.parent_path() / "textures" / line.substr(0, line.find(" ")).replace(line.find("/"), 1, "\\"));
-            }
-            else
-            {
-                fullfontpath.assign(p.parent_path() / "loc" / curlanguage / "textures" / line.substr(0, line.find(" ")).replace(line.find("/"), 1, "\\"));
-            }
-        }
-    }
-    ifstream fontfile(fullfontpath.replace_extension(".wid"), ios::binary);
-    fontfile.seekg(32, ios::beg);
-    fontfile.read(reinterpret_cast<char*>(&space_width), 1);
-    string result;
-    for (int i = 0; i <= ((width / (space_width * widthscale)) + (1 / widthscale) - widthscale + 0.8); i++)
-    {
-        result += " ";
-    }
-    cout << result.length() << endl;
-    return result;
-}
-*/
 
 string text_space()
 {
@@ -117,7 +42,6 @@ int keyevent_shiftdown = 0;
 bool hud_enablegearindicator = false;
 bool engine_enableneutralgear = false;
 
-//int game_state;
 int pause_state;
 int race_state;
 
@@ -135,8 +59,6 @@ int players_count;
 int addr_speedo;
 int addr2_speedo;
 
-//int collision_check;
-
 float carplayer_rpmcur1;
 float carplayer_rpmcur2;
 
@@ -146,17 +68,7 @@ float carplayer_rpmshiftdown;
 float game_speed;
 
 float carplayer_speed;
-/*
-float longforce_fl;
-float longforce_fr;
-float longforce_rl;
-float longforce_rr;
 
-float slipangle_fl;
-float slipangle_fr;
-float slipangle_rl;
-float slipangle_rr;
-*/
 string curgearcolor;
 string curgear;
 string geartype;
@@ -207,9 +119,6 @@ int spectator_id;
 
 DWORD WINAPI MainTHREAD(LPVOID)
 {
-    //AllocConsole();
-    //freopen("CONOUT$", "w", stdout);
-
     text_speedo.reserve(128);
 
     if (!filesystem::exists(ini_file_path))
@@ -266,6 +175,8 @@ DWORD WINAPI MainTHREAD(LPVOID)
 
     while (true)
     {
+        ReadProcessMemory(hProcess, (LPVOID)(PM.FindDMAAddy(hProcess, moduleBase + 0x38D658, { 0x0 })), &menu_id, 4, 0);
+
         ReadProcessMemory(hProcess, (LPVOID)(PM.FindDMAAddy(hProcess, moduleBase + 0x3DEA20, { 0x10, 0x4, 0x734 })), &pause_state, 1, 0);
         ReadProcessMemory(hProcess, (LPVOID)(PM.FindDMAAddy(hProcess, moduleBase + 0x38D5F0, { 0x80 })), &race_state, 1, 0);
         ReadProcessMemory(hProcess, (LPVOID)(PM.FindDMAAddy(hProcess, moduleBase + 0x3DC550, { 0x8 })), &game_speed, 4, 0);
@@ -275,7 +186,6 @@ DWORD WINAPI MainTHREAD(LPVOID)
         if (race_state == 0)
         {
             ReadProcessMemory(hProcess, (LPVOID)(PM.FindDMAAddy(hProcess, moduleBase + 0x38D658, { 0x244 })), &elements_count, 1, 0);
-            ReadProcessMemory(hProcess, (LPVOID)(PM.FindDMAAddy(hProcess, moduleBase + 0x38D658, { 0x0 })), &menu_id, 4, 0);
             ReadProcessMemory(hProcess, (LPVOID)(PM.FindDMAAddy(hProcess, moduleBase + 0x3BC998, { 0x24 })), &garcam, 1, 0);
 
             if (menu_id == 5471472)
@@ -610,31 +520,6 @@ DWORD WINAPI MainTHREAD(LPVOID)
                         }
                     }
                 }
-                /*
-                ReadProcessMemory(hProcess, (LPVOID)(PM.FindDMAAddy(hProcess, moduleBase + 0x38CEE0, { 4 + (8 * (i - 1)), 0x1A98 })), &collision_check, 1, 0);
-
-                ReadProcessMemory(hProcess, (LPVOID)(PM.FindDMAAddy(hProcess, moduleBase + 0x38CEE0, { 4 + (8 * (i - 1)), 0x69E8 })), &longforce_fl, 4, 0);
-                ReadProcessMemory(hProcess, (LPVOID)(PM.FindDMAAddy(hProcess, moduleBase + 0x38CEE0, { 4 + (8 * (i - 1)), 0x6B50 })), &longforce_fr, 4, 0);
-                ReadProcessMemory(hProcess, (LPVOID)(PM.FindDMAAddy(hProcess, moduleBase + 0x38CEE0, { 4 + (8 * (i - 1)), 0x6CB8 })), &longforce_rl, 4, 0);
-                ReadProcessMemory(hProcess, (LPVOID)(PM.FindDMAAddy(hProcess, moduleBase + 0x38CEE0, { 4 + (8 * (i - 1)), 0x6E20 })), &longforce_rr, 4, 0);
-
-                ReadProcessMemory(hProcess, (LPVOID)(PM.FindDMAAddy(hProcess, moduleBase + 0x38CEE0, { 4 + (8 * (i - 1)), 0x69EC })), &slipangle_fl, 4, 0);
-                ReadProcessMemory(hProcess, (LPVOID)(PM.FindDMAAddy(hProcess, moduleBase + 0x38CEE0, { 4 + (8 * (i - 1)), 0x6B54 })), &slipangle_fr, 4, 0);
-                ReadProcessMemory(hProcess, (LPVOID)(PM.FindDMAAddy(hProcess, moduleBase + 0x38CEE0, { 4 + (8 * (i - 1)), 0x6CBC })), &slipangle_rl, 4, 0);
-                ReadProcessMemory(hProcess, (LPVOID)(PM.FindDMAAddy(hProcess, moduleBase + 0x38CEE0, { 4 + (8 * (i - 1)), 0x6E24 })), &slipangle_rr, 4, 0);
-
-                if ((carplayer_speed == 0.f) && ((slipangle_fl / 100.f && slipangle_fr / 100.f && slipangle_rl / 100.f && slipangle_rr / 100.f != 0.f) || (longforce_fl && longforce_fr && longforce_rl && longforce_rr == 0.f)))
-                {
-                    if (collision_check == 0)
-                    {
-                        WriteProcessMemory(hProcess, (LPVOID)(PM.FindDMAAddy(hProcess, moduleBase + 0x38CEE0, { 4 + (8 * (i - 1)), 0xB74 })), &carplayer_physics_off, 4, 0);
-                    }
-                    else
-                    {
-                        WriteProcessMemory(hProcess, (LPVOID)(PM.FindDMAAddy(hProcess, moduleBase + 0x38CEE0, { 4 + (8 * (i - 1)), 0xB74 })), &carplayer_physics_on, 4, 0);
-                    }
-                }
-                */
                 if (i == 1)
                 {
                     if ((gamemodeflag == 1) && (race_state == 3))
